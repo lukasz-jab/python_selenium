@@ -32,7 +32,7 @@ class test_add_group(unittest.TestCase):
         self.logout(wd)
 
     def logout(self, wd):
-        wd.find_element_by_css_selector("a[href='group.php']").click()
+        self.wd.find_element_by_xpath("//a[@onclick='document.logout.submit();']")
 
     def return_to_groups_page(self, wd):
         wd.find_element_by_xpath("(//a[contains(@href, 'group.php')])[2]").click()
@@ -57,9 +57,7 @@ class test_add_group(unittest.TestCase):
         wd.find_element_by_xpath("//a[contains(@href, 'group.php')]").click()
 
     def login(self, wd, username, password):
-        # wd.find_element_by_css_selector("input[name=\"user\"]").clear()
         wd.find_element_by_css_selector("input[name = user]").send_keys(username)
-        # wd.find_element_by_css_selector("input[name=\"pass\"]").clear()
         wd.find_element_by_css_selector("input[name = pass]").send_keys(password)
         wd.find_element_by_css_selector("input[type = submit][value = Login]").click()
 
