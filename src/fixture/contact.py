@@ -14,7 +14,7 @@ class ContactHelper:
 
     def submit_form(self):
         wd = self.app.wd
-        wd.find_element_by_css_selector("input[type=submit][name=submit]").click()
+        wd.find_element_by_css_selector("div#content input[type=submit]").click()
         # self.wd.execute_script("arguments[0].click()", self.wd.find_element_by_css_selector("input[type=submit][name=submit]"))
 
     def delete(self):

@@ -18,7 +18,7 @@ class GroupHelper:
         wd.find_element_by_css_selector("textarea[name = group_footer]").clear()
         wd.find_element_by_css_selector("textarea[name = group_footer]").send_keys(group.footer)
         # submit group creation
-        wd.find_element_by_css_selector("input[name = submit]").click()
+        wd.find_element_by_css_selector("div#content input[type=submit]").click()
         self.app.navigation.return_to_groups()
 
 
@@ -27,4 +27,3 @@ class GroupHelper:
         wd.find_element_by_css_selector("div#content input[name='selected[]']").click()
         wd.find_element_by_css_selector("div#content input[name='delete']").click()
         self.app.is_alert_present()
-
