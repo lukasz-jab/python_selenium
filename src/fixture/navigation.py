@@ -22,5 +22,5 @@ class NavigationHelper:
 
     def return_to_groups(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("(//a[contains(@href, 'group.php')[2]])").click()
+        wd.find_element_by_xpath("//div[@class='msgbox']//a[contains(@href, 'group.php')]").click()
 

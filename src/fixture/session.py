@@ -1,3 +1,8 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
 class SessionHelper:
     def __init__(self, app):
         self.app = app
@@ -11,4 +16,6 @@ class SessionHelper:
 
     def logout(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("//a[@onclick='document.logout.submit();']").click()
+        # wd.find_element_by_xpath("//a[@onclick='document.logout.submit();']").click()
+        #added for univeral language version - in polish Usuń-delete
+        WebDriverWait(wd, 3).until(EC.element_to_be_clickable((By.XPATH, "//a[@onclick='document.logout.submit();']"))).click()
