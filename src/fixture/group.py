@@ -2,11 +2,16 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
 
-    def create(self, group):
+    def create(self, group, modify):
         wd = self.app.wd
         self.app.navigation.open_groups()
         # init group creation
-        wd.find_element_by_css_selector("input[name = new]").click()
+        if(modify==False):
+            wd.find_element_by_css_selector("input[name = new]").click()
+        else:
+            wd.find_element_by_css_selector("div#content input[name='selected[]']").click()
+            wd.find_element_by_css_selector("input[name = edit]").click()
+            print("mmmmmmmmmmmmooooooooooooooodddddddddddddyyyyyyyyyyyyyyffffffff")
         # fill group form
         wd.find_element_by_css_selector("input[name = group_name]").click()
         wd.find_element_by_css_selector("input[name = group_name]").clear()

@@ -2,9 +2,12 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-    def fill_form(self, contact):
+    def fill_form(self, contact, modify):
         wd = self.app.wd
-        self.app.navigation.open_contacts()
+        if(modify == False):
+            self.app.navigation.open_contacts()
+        elif(modify == True):
+            wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]").click()
         wd.find_element_by_css_selector("input[name=firstname]").send_keys(contact.firstname)
         wd.find_element_by_css_selector("input[name=lastname]").send_keys(contact.lastname)
         wd.find_element_by_css_selector("textarea[name=address]").send_keys(contact.address)
