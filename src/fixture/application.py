@@ -26,9 +26,7 @@ class Application:
     def is_alert_present(self):
         try:
             self.wd.switch_to_alert().accept()
-            print("UUUUUUUSSSSSSNNNNNNNNIIIIĘĘĘĘĘĘTTTTTOOOOOOOO")
         except NoAlertPresentException as e:
-            print("NNNNNNNNNIIIIIIIEEEEE")
             return False
         return True
 
