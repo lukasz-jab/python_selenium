@@ -2,17 +2,14 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-    def modify_form(self, contact):
+    def modify(self, contact):
         wd = self.app.wd
         wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]").click()
-        wd.find_element_by_css_selector("input[name=firstname]").send_keys(contact.firstname)
-        wd.find_element_by_css_selector("input[name=lastname]").send_keys(contact.lastname)
-        wd.find_element_by_css_selector("textarea[name=address]").send_keys(contact.address)
-        wd.find_element_by_css_selector("input[name=mobile]").send_keys(contact.mobile)
-        wd.find_element_by_css_selector("textarea[name=notes]").send_keys(contact.notes)
-        self.submit_form()
+        self.fill_form(contact, wd)
+        self.submit()
 
-    def submit_form(self):
+
+    def submit(self):
         wd = self.app.wd
         wd.find_element_by_css_selector("div#content input[type=submit]").click()
         # self.wd.execute_script("arguments[0].click()", self.wd.find_element_by_css_selector("input[type=submit][name=submit]"))
@@ -24,12 +21,16 @@ class ContactHelper:
         wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
         self.app.is_alert_present()
 
-    def fill_form(self, contact):
+    def create(self, contact):
         wd = self.app.wd
         self.app.navigation.open_contacts()
+        self.fill_form(contact, wd)
+        self.submit()
+
+    def fill_form(self, contact, wd):
         wd.find_element_by_css_selector("input[name=firstname]").send_keys(contact.firstname)
         wd.find_element_by_css_selector("input[name=lastname]").send_keys(contact.lastname)
         wd.find_element_by_css_selector("textarea[name=address]").send_keys(contact.address)
         wd.find_element_by_css_selector("input[name=mobile]").send_keys(contact.mobile)
         wd.find_element_by_css_selector("textarea[name=notes]").send_keys(contact.notes)
-        self.submit_form()
+        self.submit()
