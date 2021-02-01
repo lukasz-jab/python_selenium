@@ -4,8 +4,9 @@ class ContactHelper:
 
     def modify(self, contact):
         wd = self.app.wd
+        self.app.navigation.open_home()
         wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]").click()
-        self.fill_form(contact, wd)
+        self.fill_form(contact)
         self.submit()
 
 
@@ -16,6 +17,7 @@ class ContactHelper:
 
     def delete(self):
         wd = self.app.wd
+        self.app.navigation.open_home()
         wd.find_element_by_css_selector("table#maintable input[name='selected[]']").click()
         # Dont know it will pass to application below 9.0 version)
         wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
@@ -24,13 +26,18 @@ class ContactHelper:
     def create(self, contact):
         wd = self.app.wd
         self.app.navigation.open_contacts()
-        self.fill_form(contact, wd)
+        self.fill_form(contact)
         self.submit()
 
-    def fill_form(self, contact, wd):
-        wd.find_element_by_css_selector("input[name=firstname]").send_keys(contact.firstname)
-        wd.find_element_by_css_selector("input[name=lastname]").send_keys(contact.lastname)
-        wd.find_element_by_css_selector("textarea[name=address]").send_keys(contact.address)
-        wd.find_element_by_css_selector("input[name=mobile]").send_keys(contact.mobile)
-        wd.find_element_by_css_selector("textarea[name=notes]").send_keys(contact.notes)
+    def fill_form(self, contact):
+        self.change_field_value("input[name=firstname]", contact.firstname)
+        self.change_field_value("input[name=lastname]", contact.lastname)
+        self.change_field_value("textarea[name=address]", contact.address)
+        self.change_field_value("input[name=mobile]", contact.mobile)
+        self.change_field_value("textarea[name=notes]", contact.notes)
         self.submit()
+
+    def change_field_value(self, locator, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element_by_css_selector(locator).send_keys(text)
