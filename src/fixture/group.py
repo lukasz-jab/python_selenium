@@ -50,3 +50,9 @@ class GroupHelper:
 
     def submit_group_form(self, wd):
         wd.find_element_by_css_selector("div#content input[type=submit]").click()
+
+
+    def count(self):
+        wd = self.app.wd
+        self.app.navigation.open_groups
+        return len(wd.find_elements_by_css_selector("div#content input[name='selected[]']"))

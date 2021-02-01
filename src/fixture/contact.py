@@ -41,3 +41,9 @@ class ContactHelper:
         wd = self.app.wd
         if text is not None:
             wd.find_element_by_css_selector(locator).send_keys(text)
+
+
+    def count(self):
+        wd = self.app.wd
+        self.app.navigation.open_home
+        return len(wd.find_elements_by_css_selector("table#maintable input[name='selected[]']"))
