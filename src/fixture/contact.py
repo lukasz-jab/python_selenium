@@ -45,5 +45,5 @@ class ContactHelper:
 
     def count(self):
         wd = self.app.wd
-        self.app.navigation.open_home
+        self.app.navigation.open_home()
         return len(wd.find_elements_by_css_selector("table#maintable input[name='selected[]']"))

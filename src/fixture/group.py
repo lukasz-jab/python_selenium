@@ -54,5 +54,5 @@ class GroupHelper:
 
     def count(self):
         wd = self.app.wd
-        self.app.navigation.open_groups
+        self.app.navigation.open_groups()
         return len(wd.find_elements_by_css_selector("div#content input[name='selected[]']"))
