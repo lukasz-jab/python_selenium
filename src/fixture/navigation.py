@@ -7,7 +7,8 @@ class NavigationHelper:
 
     def open_groups(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("//a[contains(@href, 'group.php')]").click()
+        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_css_selector("div#container div#content input[name = new]")) > 0):
+            wd.find_element_by_xpath("//a[contains(@href, 'group.php')]").click()
 
     def open_home(self):
         wd = self.app.wd
@@ -15,10 +16,11 @@ class NavigationHelper:
 
     def open_contacts(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("//a[contains(@href,'edit.php')]").click()
-        # I have app in version 9.0
-        if (self.app.is_element_present(By.CSS_SELECTOR, ("input[type=submit][name=quickadd]"))):
-            wd.find_element_by_css_selector("input[type=submit][name=quickadd]").click()
+        if not (wd.current_url.endswith("/edit.php") and len(wd.find_elements_by_css_selector("div#container div#content form[name='theform']")) > 0):
+            wd.find_element_by_xpath("//a[contains(@href,'edit.php')]").click()
+            # I have app in version 9.0
+            if (self.app.is_element_present(By.CSS_SELECTOR, ("input[type=submit][name=quickadd]"))):
+                wd.find_element_by_css_selector("input[type=submit][name=quickadd]").click()
 
     def return_to_groups(self):
         wd = self.app.wd
