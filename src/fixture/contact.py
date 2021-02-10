@@ -4,10 +4,10 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-    def modify(self, contact):
+    def modify(self, index, contact):
         wd = self.app.wd
         self.app.navigation.open_home()
-        wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]").click()
+        wd.find_elements_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]")[index].click()
         self.fill_form(contact)
         self.submit()
         self.contact_cache = None
@@ -20,13 +20,7 @@ class ContactHelper:
 
 
     def delete(self):
-        wd = self.app.wd
-        self.app.navigation.open_home()
-        wd.find_element_by_css_selector("table#maintable input[name='selected[]']").click()
-        # Dont know it will pass to application below 9.0 version)
-        wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
-        self.app.is_alert_present()
-        self.contact_cache = None
+        self.delete_by_index(0)
 
     def create(self, contact):
         wd = self.app.wd
@@ -75,3 +69,13 @@ class ContactHelper:
                 self.contact_cache.append(Contact(id=c_id, firstname=c_firstnames[i]))
                 i = i + 1
         return list(self.contact_cache)
+
+
+    def delete_by_index(self, index):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_elements_by_css_selector("table#maintable input[name='selected[]']")[index].click()
+        # Dont know it will pass to application below 9.0 version)
+        wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
+        self.app.is_alert_present()
+        self.contact_cache = None

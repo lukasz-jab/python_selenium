@@ -5,10 +5,10 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
 
-    def modify_first_group(self, group):
+    def modify_some_group(self, index, group):
         wd = self.app.wd
         self.app.navigation.open_groups()
-        # wd.find_element_by_css_selector("div#content input[name='selected[]']").click()
+        wd.find_elements_by_css_selector("div#content input[name='selected[]']")[index].click()
         wd.find_element_by_css_selector("div#content input[name = edit]").click()
         self.fill_group_form(group)
         self.submit_group_form(wd)
@@ -74,3 +74,17 @@ class GroupHelper:
                     name = g.get_property("nextSibling").get("nodeValue")
                 self.group_cache.append(Group(id=g.get_property("value"), name=name))
         return list(self.group_cache)
+
+
+    def delete_by_index(self, index):
+        wd = self.app.wd
+        self.app.navigation.open_groups()
+        self.select_group_by_index(index)
+        wd.find_element_by_css_selector("div#content input[name='delete']").click()
+        self.app.is_alert_present()
+        self.app.navigation.return_to_groups()
+        self.group_cache = None
+
+    def select_group_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_css_selector("div#content input[name='selected[]']")[index].click()
