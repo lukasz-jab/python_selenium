@@ -1,6 +1,5 @@
 from src.model.contact import Contact
 
-
 class ContactHelper:
     def __init__(self, app):
         self.app = app
@@ -11,11 +10,14 @@ class ContactHelper:
         wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php')]").click()
         self.fill_form(contact)
         self.submit()
+        self.contact_cache = None
 
     def submit(self):
         wd = self.app.wd
-        wd.find_element_by_css_selector("div#content input[type=submit]").click()
-        # self.wd.execute_script("arguments[0].click()", self.wd.find_element_by_css_selector("input[type=submit][name=submit]"))
+        Element = wd.find_element_by_css_selector("input[type=submit]")
+        wd.execute_script("arguments[0].scrollIntoView();", Element);
+        Element.click()
+
 
     def delete(self):
         wd = self.app.wd
@@ -24,12 +26,14 @@ class ContactHelper:
         # Dont know it will pass to application below 9.0 version)
         wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
         self.app.is_alert_present()
+        self.contact_cache = None
 
     def create(self, contact):
         wd = self.app.wd
         self.app.navigation.open_contacts()
         self.fill_form(contact)
         self.submit()
+        self.contact_cache = None
 
     def fill_form(self, contact):
         self.change_field_value("input[name=firstname]", contact.firstname)
@@ -50,21 +54,24 @@ class ContactHelper:
         self.app.navigation.open_home()
         return len(wd.find_elements_by_css_selector("table#maintable input[name='selected[]']"))
 
+    contact_cache = None
+
     def get_contacs_list(self):
-        wd = self.app.wd
-        self.app.navigation.open_home()
-        contacts = []
-        edit_links = []
-        c_firstnames = []
-        web_elements_contact = wd.find_elements_by_css_selector("table#maintable input[name='selected[]']")
-        for web_el in web_elements_contact:
-            edit_links.append(web_el.get_attribute("id"))
-        for link in edit_links:
-            wd.find_element_by_css_selector("a[href='edit.php?id=" + link + "']").click()
-            c_firstnames.append(wd.find_element_by_css_selector("input[name=firstname]").get_attribute("value"))
+        if self.contact_cache is None:
+            wd = self.app.wd
             self.app.navigation.open_home()
-        i = 0
-        for c_id in edit_links:
-            contacts.append(Contact(id=c_id, firstname=c_firstnames[i]))
-            i = i + 1
-        return contacts
+            self.contact_cache = []
+            edit_links = []
+            c_firstnames = []
+            web_elements_contact = wd.find_elements_by_css_selector("table#maintable input[name='selected[]']")
+            for web_el in web_elements_contact:
+                edit_links.append(web_el.get_attribute("id"))
+            for link in edit_links:
+                wd.find_element_by_css_selector("a[href='edit.php?id=" + link + "']").click()
+                c_firstnames.append(wd.find_element_by_css_selector("input[name=firstname]").get_attribute("value"))
+                self.app.navigation.open_home()
+            i = 0
+            for c_id in edit_links:
+                self.contact_cache.append(Contact(id=c_id, firstname=c_firstnames[i]))
+                i = i + 1
+        return list(self.contact_cache)

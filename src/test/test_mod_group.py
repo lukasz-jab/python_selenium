@@ -11,10 +11,10 @@ def test_mod_group(app):
                   + str(datetime.now()))
     group.id = old_groups[0].id
     app.group.modify_first_group(group)
-    new_groups = app.group.get_groups_list()
     # in application, in 9.0 version, is bug after updating a group:
     # Invalid ID.
     # return to the group page
-    assert len(old_groups) == len(new_groups)
+    assert len(old_groups) == app.group.count()
+    new_groups = app.group.get_groups_list()
     old_groups[0] = group
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
