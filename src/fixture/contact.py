@@ -35,7 +35,7 @@ class ContactHelper:
         self.change_field_value("input[name=firstname]", contact.firstname)
         self.change_field_value("input[name=lastname]", contact.lastname)
         self.change_field_value("textarea[name=address]", contact.address)
-        # self.change_field_value("input[name=mobile]", contact.mobile)
+        self.change_field_value("input[name=mobile]", contact.mobilephone)
         self.change_field_value("textarea[name=notes]", contact.notes)
         self.submit()
 

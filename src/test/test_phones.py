@@ -11,7 +11,6 @@ def test_phones_on_main_page(app):
 def test_phones_on_view_page(app):
     test_contact = app.contact.get_contacs_list()[0]
     contact_from_view_page = app.contact.get_contact_info_from_view_page(test_contact.id)
-    print("testphones:")
     print(contact_from_view_page.all_phones_from_home_page)
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(test_contact.id)
     assert clear(contact_from_view_page.all_phones_from_home_page) == merge_phones_like_on_home_page(contact_from_edit_page)
