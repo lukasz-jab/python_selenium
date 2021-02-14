@@ -12,5 +12,5 @@ def test_del_some_contact(app):
     app.contact.delete_by_index(index)
     assert len(old_contacts) - 1 == app.contact.count()
     new_contacts = app.contact.get_contacs_list()
-    old_contacts[index:(index+1)] = []
+    old_contacts[index:(index + 1)] = []
     assert old_contacts == new_contacts

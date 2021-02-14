@@ -1,4 +1,7 @@
+import re
+
 from src.model.contact import Contact
+
 
 class ContactHelper:
     def __init__(self, app):
@@ -14,16 +17,15 @@ class ContactHelper:
 
     def submit(self):
         wd = self.app.wd
-        Element = wd.find_element_by_css_selector("input[type=submit]")
-        wd.execute_script("arguments[0].scrollIntoView();", Element);
-        Element.click()
-
+        # chromedriver 88 cannot find but can click css selector ("input[type=submit]")
+        element = wd.find_element_by_xpath("//input[@type='submit']")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
 
     def delete(self):
         self.delete_by_index(0)
 
     def create(self, contact):
-        wd = self.app.wd
         self.app.navigation.open_contacts()
         self.fill_form(contact)
         self.submit()
@@ -33,7 +35,7 @@ class ContactHelper:
         self.change_field_value("input[name=firstname]", contact.firstname)
         self.change_field_value("input[name=lastname]", contact.lastname)
         self.change_field_value("textarea[name=address]", contact.address)
-        self.change_field_value("input[name=mobile]", contact.mobile)
+        # self.change_field_value("input[name=mobile]", contact.mobile)
         self.change_field_value("textarea[name=notes]", contact.notes)
         self.submit()
 
@@ -57,19 +59,24 @@ class ContactHelper:
             self.contact_cache = []
             edit_links = []
             c_firstnames = []
+            c_lastnames = []
+            c_all_phones = []
             web_elements_contact = wd.find_elements_by_css_selector("table#maintable input[name='selected[]']")
             for web_el in web_elements_contact:
                 edit_links.append(web_el.get_attribute("id"))
+                c_all_phones.append(web_el.find_element_by_xpath("./../following-sibling::td[5]").text)
             for link in edit_links:
                 wd.find_element_by_css_selector("a[href='edit.php?id=" + link + "']").click()
                 c_firstnames.append(wd.find_element_by_css_selector("input[name=firstname]").get_attribute("value"))
+                c_lastnames.append(wd.find_element_by_css_selector("input[name=lastname]").get_attribute("value"))
                 self.app.navigation.open_home()
             i = 0
             for c_id in edit_links:
-                self.contact_cache.append(Contact(id=c_id, firstname=c_firstnames[i]))
+                phones = c_all_phones[i]
+                self.contact_cache.append(Contact(id=c_id, firstname=c_firstnames[i], lastname=c_lastnames[i],
+                                                  all_phones_from_home_page=phones))
                 i = i + 1
         return list(self.contact_cache)
-
 
     def delete_by_index(self, index):
         wd = self.app.wd
@@ -79,3 +86,37 @@ class ContactHelper:
         wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
         self.app.is_alert_present()
         self.contact_cache = None
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_element_by_css_selector("a[href='view.php?id=" + str(index) + "']").click()
+
+    def open_contact_edit_by_index(self, index):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_element_by_css_selector("a[href='edit.php?id=" + str(index) + "']").click()
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_edit_by_index(index)
+        id = wd.find_element_by_css_selector("input[name=id]").get_attribute("value")
+        first_name = wd.find_element_by_css_selector("input[name=firstname]").get_attribute("value")
+        last_name = wd.find_element_by_css_selector("input[name=lastname]").get_attribute("value")
+        home_phone = wd.find_element_by_css_selector("input[name=home]").get_attribute("value")
+        mobile_phone = wd.find_element_by_css_selector("input[name=mobile]").get_attribute("value")
+        work_phone = wd.find_element_by_css_selector("input[name=work]").get_attribute("value")
+        fax_phone = wd.find_element_by_css_selector("input[name=fax]").get_attribute("value")
+        return Contact(id=id, firstname=first_name, lastname=last_name, homephone=home_phone, mobilephone=mobile_phone,
+                       workphone=work_phone)
+
+    def get_contact_info_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        text = wd.find_element_by_css_selector("div#content").text
+        homephone = re.findall("H: (.*)", text)
+        mobilephone = re.findall("M: (.*)", text)
+        workphone =  re.findall("W: (.*)", text)
+        #faxphone = re.findall("F: (.*)", text)
+        allphones = homephone+mobilephone+workphone
+        return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]))

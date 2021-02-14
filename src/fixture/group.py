@@ -75,7 +75,6 @@ class GroupHelper:
                 self.group_cache.append(Group(id=g.get_property("value"), name=name))
         return list(self.group_cache)
 
-
     def delete_by_index(self, index):
         wd = self.app.wd
         self.app.navigation.open_groups()
