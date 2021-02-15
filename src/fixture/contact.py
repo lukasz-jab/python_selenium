@@ -61,10 +61,14 @@ class ContactHelper:
             c_firstnames = []
             c_lastnames = []
             c_all_phones = []
+            c_all_emails = []
+            c_address = []
             web_elements_contact = wd.find_elements_by_css_selector("table#maintable input[name='selected[]']")
             for web_el in web_elements_contact:
                 edit_links.append(web_el.get_attribute("id"))
                 c_all_phones.append(web_el.find_element_by_xpath("./../following-sibling::td[5]").text)
+                c_all_emails.append(web_el.find_element_by_xpath("./../following-sibling::td[4]").text)
+                c_address.append(web_el.find_element_by_xpath("./../following-sibling::td[3]").text)
             for link in edit_links:
                 wd.find_element_by_css_selector("a[href='edit.php?id=" + link + "']").click()
                 c_firstnames.append(wd.find_element_by_css_selector("input[name=firstname]").get_attribute("value"))
@@ -73,8 +77,10 @@ class ContactHelper:
             i = 0
             for c_id in edit_links:
                 phones = c_all_phones[i]
+                emails = c_all_emails[i]
+                address = c_address[i]
                 self.contact_cache.append(Contact(id=c_id, firstname=c_firstnames[i], lastname=c_lastnames[i],
-                                                  all_phones_from_home_page=phones))
+                                                  all_phones_from_home_page=phones, all_emails=emails, address=address))
                 i = i + 1
         return list(self.contact_cache)
 
@@ -106,9 +112,16 @@ class ContactHelper:
         home_phone = wd.find_element_by_css_selector("input[name=home]").get_attribute("value")
         mobile_phone = wd.find_element_by_css_selector("input[name=mobile]").get_attribute("value")
         work_phone = wd.find_element_by_css_selector("input[name=work]").get_attribute("value")
+        email_1 = wd.find_element_by_css_selector("input[name=email]").get_attribute("value")
+        email_2 = wd.find_element_by_css_selector("input[name=email2]").get_attribute("value")
+        email_3 = wd.find_element_by_css_selector("input[name=email3]").get_attribute("value")
+        address = wd.find_element_by_css_selector("textarea[name=address]").get_attribute("value")
+        notes = wd.find_element_by_css_selector("textarea[name=notes]").get_attribute("value")
         fax_phone = wd.find_element_by_css_selector("input[name=fax]").get_attribute("value")
         return Contact(id=id, firstname=first_name, lastname=last_name, homephone=home_phone, mobilephone=mobile_phone,
-                       workphone=work_phone)
+                       workphone=work_phone, email_1=email_1, email_2=email_2, email_3=email_3,
+                       address=address, notes=notes)
+
 
     def get_contact_info_from_view_page(self, index):
         wd = self.app.wd
@@ -118,5 +131,6 @@ class ContactHelper:
         mobilephone = re.findall("M: (.*)", text)
         workphone =  re.findall("W: (.*)", text)
         #faxphone = re.findall("F: (.*)", text)
+        email_1 = wd.find_element_by_css_selector("a[href^='mailto']")
         allphones = homephone+mobilephone+workphone
-        return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]))
+        return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]),email_1=email_1)
