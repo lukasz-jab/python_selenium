@@ -13,7 +13,8 @@ class NavigationHelper:
 
     def open_home(self):
         wd = self.app.wd
-        wd.get("http://127.0.0.1/addressbook/index.php")
+        base_url = self.app.base_url
+        wd.get(base_url)
 
     def open_contacts(self):
         wd = self.app.wd
