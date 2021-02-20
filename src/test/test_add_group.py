@@ -10,11 +10,8 @@ def random_string(prefix, maxlen):
 
 
 
-test_data = [Group(name=name, header=header, footer=footer)
-    for name in ["", random_string("name", 10) ]
-    for header in ["", random_string("header", 10)]
-    for footer in ["", random_string("footer", 10)]
-    ]
+test_data = [Group(name=random_string("name", 10), header=random_string("header", 10), footer=random_string("footer", 10))
+             for i in range(3)]
 
 @pytest.mark.parametrize("group", test_data, ids=[repr(x) for x in test_data])
 def test_add_group(app, group):
