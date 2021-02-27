@@ -1,10 +1,12 @@
-import jsonpickle
+import getopt
+import os
 import random
 import string
-from src.model.group import Group
-import os
-import getopt
 import sys
+
+import jsonpickle
+
+from src.model.group import Group
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "n:f:", ["number of groups", "file"])
@@ -27,11 +29,13 @@ for o, a in opts:
 
 
 def random_string(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits + " "*7
+    symbols = string.ascii_letters + string.digits + " " * 7
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
-test_data = [Group(name=random_string("name", 10), header=random_string("header", 10), footer=random_string("footer", 10))
-             for i in range(n)]
+
+test_data = [
+    Group(name=random_string("name", 10), header=random_string("header", 10), footer=random_string("footer", 10))
+    for i in range(n)]
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../", f)
 

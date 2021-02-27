@@ -1,1 +1,16 @@
-[{"py/object": "src.model.group.Group", "id": null, "name": "nameh6E", "header": "headerlYlNj", "footer": "footerNU Yh6"}, {"py/object": "src.model.group.Group", "id": null, "name": "namegqmFN", "header": "header xw0", "footer": "footerv093Yu4"}]
+[
+  {
+    "py/object": "src.model.group.Group",
+    "id": null,
+    "name": "nameh6E",
+    "header": "headerlYlNj",
+    "footer": "footerNU Yh6"
+  },
+  {
+    "py/object": "src.model.group.Group",
+    "id": null,
+    "name": "namegqmFN",
+    "header": "header xw0",
+    "footer": "footerv093Yu4"
+  }
+]

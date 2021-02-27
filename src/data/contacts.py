@@ -1,17 +1,11 @@
 from src.model.contact import Contact
 
-
 testdata = [
     Contact(firstname="firstname1", lastname="lastname1", homephone="1+1+1 1", mobilephone="2-2-2 2",
-                      workphone="(3(3)3) 3", address="adress", notes="notes"),
+            workphone="(3(3)3) 3", address="adress", notes="notes"),
     Contact(firstname="?firstname2*", lastname="=lastname2&", homephone="1+1+1 1", mobilephone="2-2-2 2",
-                      workphone="(3(3)3) 3", address="*adress?", notes="*notes/")
+            workphone="(3(3)3) 3", address="*adress?", notes="*notes/")
 ]
-
-
-
-
-
 
 #
 # def random_string(prefix, maxlen):

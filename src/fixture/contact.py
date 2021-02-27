@@ -122,15 +122,14 @@ class ContactHelper:
                        workphone=work_phone, email_1=email_1, email_2=email_2, email_3=email_3,
                        address=address, notes=notes)
 
-
     def get_contact_info_from_view_page(self, index):
         wd = self.app.wd
         self.open_contact_view_by_index(index)
         text = wd.find_element_by_css_selector("div#content").text
         homephone = re.findall("H: (.*)", text)
         mobilephone = re.findall("M: (.*)", text)
-        workphone =  re.findall("W: (.*)", text)
-        #faxphone = re.findall("F: (.*)", text)
+        workphone = re.findall("W: (.*)", text)
+        # faxphone = re.findall("F: (.*)", text)
         email_1 = wd.find_element_by_css_selector("a[href^='mailto']")
-        allphones = homephone+mobilephone+workphone
-        return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]),email_1=email_1)
+        allphones = homephone + mobilephone + workphone
+        return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]), email_1=email_1)

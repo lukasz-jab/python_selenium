@@ -1,10 +1,12 @@
+import getopt
 import os
 import random
 import string
-from src.model.contact import Contact
-import jsonpickle
-import getopt
 import sys
+
+import jsonpickle
+
+from src.model.contact import Contact
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "n:f:", ["number of contacts", "file"])
@@ -25,13 +27,16 @@ for o, a in opts:
     else:
         assert False, "unhandled option"
 
+
 def random_string(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits + " "*10
+    symbols = string.ascii_letters + string.digits + " " * 10
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
-test_data= [
-    Contact(firstname=random_string("name", 10), lastname=random_string("name", 10), homephone="1+1+1 1", mobilephone="2-2-2 2",
-                      workphone="(3(3)3) 3", address=random_string("adress", 30), notes=random_string("notes", 50))
+
+test_data = [
+    Contact(firstname=random_string("name", 10), lastname=random_string("name", 10), homephone="1+1+1 1",
+            mobilephone="2-2-2 2",
+            workphone="(3(3)3) 3", address=random_string("adress", 30), notes=random_string("notes", 50))
     for i in range(n)]
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../", f)

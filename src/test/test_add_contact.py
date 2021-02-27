@@ -1,4 +1,3 @@
-import pytest
 from src.model.contact import Contact
 
 
