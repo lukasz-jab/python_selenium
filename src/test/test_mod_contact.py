@@ -1,22 +1,22 @@
+import random
 from datetime import datetime
-from random import randrange
 
 from src.model.contact import Contact
 
 
-def test_mod_contact(app):
-    if app.contact.count() == 0:
+def test_mod_contact(app, db):
+    if len(db.get_contacts_list()) == 0:
         app.contact.create(
             Contact("Precond name", "Precond last", "Precon address", " Precond notes notes notes"))
 
-    old_contacts = app.contact.get_contacs_list()
+    old_contacts = db.get_contacts_list()
     contact = Contact(" " + str(datetime.now()) + " ", "" + str(datetime.now()) + " ", ""
                       + str(datetime.now()) + " "
                       + " ", " " + str(datetime.now()))
-    index = randrange(len(old_contacts))
-    contact.id = old_contacts[index].id
-    app.contact.modify(index, contact)
-    assert len(old_contacts) == app.contact.count()
-    new_contacts = app.contact.get_contacs_list()
-    old_contacts[index] = contact
+    modyfied_contact = random.choice(old_contacts)
+    app.contact.modify_by_id(modyfied_contact.id, contact)
+    new_contacts = db.get_contacts_list()
+    old_contacts.remove(modyfied_contact)
+    contact.set_id(modyfied_contact.id)
+    old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)

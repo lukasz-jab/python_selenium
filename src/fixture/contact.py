@@ -21,6 +21,7 @@ class ContactHelper:
         element = wd.find_element_by_xpath("//input[@type='submit']")
         wd.execute_script("arguments[0].scrollIntoView();", element)
         element.click()
+        self.app.navigation.open_home()
 
     def delete(self):
         self.delete_by_index(0)
@@ -133,3 +134,20 @@ class ContactHelper:
         email_1 = wd.find_element_by_css_selector("a[href^='mailto']")
         allphones = homephone + mobilephone + workphone
         return Contact(all_phones_from_home_page="\n".join([str(elem) for elem in allphones]), email_1=email_1)
+
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_element_by_css_selector("table#maintable input[value='" + str(id) + "']").click()
+        # Dont know it will pass to application below 9.0 version)
+        wd.find_element_by_xpath("//form[@name='MainForm']//input[@type='button' and @onclick='DeleteSel()']").click()
+        self.app.is_alert_present()
+        self.contact_cache = None
+
+    def modify_by_id(self, id, contact):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_element_by_xpath("//table[@id='maintable']//a[contains(@href, 'edit.php?id=%s')]" % id).click()
+        self.fill_form(contact)
+        self.submit()
+        self.contact_cache = None

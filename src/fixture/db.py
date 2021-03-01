@@ -10,12 +10,13 @@ class DbFixture:
         self.name = name
         self.user = user
         self.password = password
-        self.connection = pymysql.connect(host=self.host, database=self.name, user=self.user, password=self.password)
+        self.connection = pymysql.connect(host=self.host, database=self.name, user=self.user, password=self.password,
+                                          autocommit=True)
 
     def destroy(self):
         self.connection.close()
 
-    def get_group_list(self):
+    def get_groups_list(self):
         groups = []
         cursor = self.connection.cursor()
         try:
@@ -27,7 +28,7 @@ class DbFixture:
             cursor.close()
         return groups
 
-    def get_contact_list(self):
+    def get_contacts_list(self):
         contacts = []
         cursor = self.connection.cursor()
         try:

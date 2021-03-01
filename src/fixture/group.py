@@ -87,3 +87,26 @@ class GroupHelper:
     def select_group_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_css_selector("div#content input[name='selected[]']")[index].click()
+
+    def select_group_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("div#content input[value='" + id + "']").click()
+
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.app.navigation.open_groups()
+        self.select_group_by_id(id)
+        wd.find_element_by_css_selector("div#content input[name='delete']").click()
+        self.app.is_alert_present()
+        self.app.navigation.return_to_groups()
+        self.group_cache = None
+
+    def modify_some_group_by_id(self, id, group):
+        wd = self.app.wd
+        self.app.navigation.open_groups()
+        wd.find_element_by_css_selector("div#content input[value='" + id + "']").click()
+        wd.find_element_by_css_selector("div#content input[name = edit]").click()
+        self.fill_group_form(group)
+        self.submit_group_form(wd)
+        self.app.navigation.return_to_groups()
+        self.group_cache = None

@@ -31,3 +31,6 @@ class Contact:
             return int(self.id)
         else:
             return maxsize
+
+    def set_id(self, id):
+        self.id = id

@@ -4,11 +4,11 @@ import re
 from src.model.contact import Contact
 
 
-def test_data_home_edit_sites(app):
-    if app.contact.count() == 0:
+def test_data_home_edit_sites(app, db):
+    if len(db.get_contacts_list()) == 0:
         app.contact.create(
             Contact("Precond name", "Precond last", "Precon address", "00000", " Precond notes notes notes"))
-    index = app.contact.count()
+    index = len(db.get_contacts_list())
     contact_from_home_page = app.contact.get_contacs_list()[random.randint(0, index - 1)]
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(contact_from_home_page.id)
     # test all phones in file: test_phones.py
