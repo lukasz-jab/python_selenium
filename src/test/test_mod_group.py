@@ -4,7 +4,7 @@ from datetime import datetime
 from src.model.group import Group
 
 
-def test_mod_group(app, db):
+def test_mod_group(app, db, check_ui):
     if len(db.get_groups_list()) == 0:
         app.group.create(Group("Precondiction Group name", "Precondition Group header", "Precongition Group footer"))
     old_groups = db.get_groups_list()
@@ -19,3 +19,5 @@ def test_mod_group(app, db):
     old_groups.remove(modyfied_group)
     group.set_id(modyfied_group.id)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_groups_list(), key=Group.id_or_max)

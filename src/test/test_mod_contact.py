@@ -4,7 +4,7 @@ from datetime import datetime
 from src.model.contact import Contact
 
 
-def test_mod_contact(app, db):
+def test_mod_contact(app, db, check_ui):
     if len(db.get_contacts_list()) == 0:
         app.contact.create(
             Contact("Precond name", "Precond last", "Precon address", " Precond notes notes notes"))
@@ -20,3 +20,5 @@ def test_mod_contact(app, db):
     contact.set_id(modyfied_contact.id)
     old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
+    if check_ui:
+        assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contacs_list(), key=Contact.id_or_max)

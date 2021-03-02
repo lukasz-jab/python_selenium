@@ -3,7 +3,7 @@ import random
 from src.model.contact import Contact
 
 
-def test_del_some_contact(app, db):
+def test_del_some_contact(app, db, check_ui):
     if len(db.get_contacts_list()) == 0:
         app.contact.create(
             Contact("Precond name", "Precond last", "Precon address", "00000", " Precond notes notes notes"))
@@ -15,3 +15,5 @@ def test_del_some_contact(app, db):
     app.navigation.open_home()
     new_contacts = db.get_contacts_list()
     assert old_contacts == new_contacts
+    if check_ui:
+        assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contacs_list(), key=Contact.id_or_max)
