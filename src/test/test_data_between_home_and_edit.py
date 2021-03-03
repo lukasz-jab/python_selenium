@@ -4,6 +4,21 @@ import re
 from src.model.contact import Contact
 
 
+def test_contacts_from_home_with_db(app, db):
+    contacts_ui = app.contact.get_contacs_list()
+    contacts_db = db.get_contacts_list()
+    #check the id and firstname between ui and db elements:
+    assert sorted(contacts_ui, key=Contact.id_or_max) == sorted(contacts_db, key=Contact.id_or_max)
+    #check other fields:
+    for c_ui in contacts_ui:
+        for c_db in contacts_db:
+            if c_db.id == c_ui.id:
+                assert c_ui.lastname == c_db.lastname
+                assert c_ui.address == c_db.address
+                assert c_ui.all_phones_from_home_page == merge_phones_like_on_home_page(c_db)
+                assert c_ui.all_emails == merge_emails_like_on_home_page(c_db)
+
+
 def test_data_home_edit_sites(app, db):
     if len(db.get_contacts_list()) == 0:
         app.contact.create(
