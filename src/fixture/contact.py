@@ -1,6 +1,7 @@
 import re
-
+from selenium.webdriver.support.ui import Select
 from src.model.contact import Contact
+from src.model.group import Group
 
 
 class ContactHelper:
@@ -151,3 +152,24 @@ class ContactHelper:
         self.fill_form(contact)
         self.submit()
         self.contact_cache = None
+
+    def add_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        self.app.navigation.open_home()
+        wd.find_element_by_css_selector("input[type=checkbox][id='"+contact.id+"']").click()
+        select = Select(wd.find_element_by_css_selector("select[name=to_group]"))
+        select.select_by_visible_text(group.name)
+        wd.find_element_by_css_selector("div.right input[name=add]").click()
+        self.app.navigation.open_home()
+
+
+    def delete_contact_from_group(self, contact, group):
+        wd = self.app.wd
+        select = Select(wd.find_element_by_css_selector("select[name=group]"))
+        select.select_by_visible_text(group.name)
+        wd.find_element_by_css_selector("input[type=checkbox][id='"+contact.id+"']").click()
+        wd.find_element_by_css_selector("div.left input[type=submit]").click()
+        self.app.navigation.open_home()
+
+
+
