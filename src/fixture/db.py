@@ -41,5 +41,19 @@ class DbFixture:
                                         notes=notes))
         finally:
             cursor.close()
-
         return contacts
+
+    def get_last_added_contact(self):
+        contacts = []
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(
+                "SELECT id, firstname, lastname, address, home, mobile, work, email, notes FROM addressbook where deprecated = '0000-00-00 00:00:00' ORDER BY created DESC LIMIT 1")
+            for row in cursor:
+                (id, firstname, lastname, address, home, mobile, work, email, notes) = row
+                contacts.append(Contact(id=str(id), firstname=firstname, lastname=lastname, address=address,
+                                        homephone=home, mobilephone=mobile, workphone=work, email_1=email,
+                                        notes=notes))
+        finally:
+            cursor.close()
+        return contacts[0]

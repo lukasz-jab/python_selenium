@@ -12,16 +12,23 @@ def test_add_and_delete_contact_to_group(app, db):
     if len(db.get_groups_list()) == 0:
         app.group.create(Group("Precondiction Group name", "Precondition Group header", "Precongition Group footer"))
 
-    contact = random.choice(db.get_contacts_list())
-    group = random.choice(db.get_groups_list())
-    app.contact.add_contact_to_group(contact, group)
-
     db_orm = ORMFixture(host="127.0.0.1", name="addressbook", user="admin", password="password")
 
-    assert str(contact) in str(db_orm.get_contact_in_group(group))
-
-    #Removing added group from contact:
-    app.contact.delete_contact_from_group(contact, group)
-
-    assert str(contact) not in str((db_orm.get_contact_in_group(group)))
-
+    groups = db_orm.get_group_list()
+    for g in groups:
+        if len(db_orm.get_contact_not_in_group(g)) > 0:
+            contact = random.choice(db_orm.get_contact_not_in_group(g))
+            app.contact.add_contact_to_group(contact, g)
+            assert contact in db_orm.get_contact_in_group(g)
+            app.contact.delete_contact_from_group(contact, g)
+            assert contact not in db_orm.get_contact_in_group(g)
+            return
+        else:
+            app.contact.create(Contact(firstname="Contact"))
+            app.navigation.open_contacts()
+            contact = db.get_last_added_contact()
+            group = random.choice(db.get_groups_list())
+            app.contact.add_contact_to_group(contact, group)
+            assert str(contact) in str(db_orm.get_contact_in_group(group))
+            app.contact.delete_contact_from_group(contact, group)
+            assert str(contact) not in str(db_orm.get_contact_in_group(group))

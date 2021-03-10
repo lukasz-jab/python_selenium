@@ -156,7 +156,7 @@ class ContactHelper:
     def add_contact_to_group(self, contact, group):
         wd = self.app.wd
         self.app.navigation.open_home()
-        wd.find_element_by_css_selector("input[type=checkbox][id='"+contact.id+"']").click()
+        wd.find_element_by_css_selector("input[type=checkbox][id='"+str(contact.id)+"']").click()
         select = Select(wd.find_element_by_css_selector("select[name=to_group]"))
         select.select_by_visible_text(group.name)
         wd.find_element_by_css_selector("div.right input[name=add]").click()
@@ -167,7 +167,7 @@ class ContactHelper:
         wd = self.app.wd
         select = Select(wd.find_element_by_css_selector("select[name=group]"))
         select.select_by_visible_text(group.name)
-        wd.find_element_by_css_selector("input[type=checkbox][id='"+contact.id+"']").click()
+        wd.find_element_by_css_selector("input[type=checkbox][id='"+str(contact.id)+"']").click()
         wd.find_element_by_css_selector("div.left input[type=submit]").click()
         self.app.navigation.open_home()
 
