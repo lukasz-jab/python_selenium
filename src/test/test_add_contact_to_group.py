@@ -31,6 +31,4 @@ def test_add_contact_to_group(app, db):
             group = random.choice(db.get_groups_list())
             app.contact.add_contact_to_group(contact, group)
             assert str(contact) in str(db_orm.get_contact_in_group(group))
-            app.contact.delete_contact_from_group(contact, group)
-            assert str(contact) not in str(db_orm.get_contact_in_group(group))
             print("IN ELSE")
